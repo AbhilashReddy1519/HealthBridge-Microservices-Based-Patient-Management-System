@@ -38,11 +38,11 @@ public class Patient {
   @NotNull
   private LocalDate dateOfBirth;
 
-  @NotNull
+  // @NotNull
   @CreationTimestamp
   private LocalDate  registeredAt;
 
-  @NotNull
+  // @NotNull
   @UpdateTimestamp
   private LocalDateTime  updatedAt;
 }
