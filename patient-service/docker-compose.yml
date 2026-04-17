@@ -1,0 +1,38 @@
+
+services:
+  patient-service-db:
+    build:
+      context: .
+      dockerfile: Dockerfile.patient-service-db
+    image: pm/patient-service-db:v1
+    container_name: patient_service_db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5000:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - patient
+  patient-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.patient-service
+    image: pm/patient-service:v1
+    container_name: patient_service_app
+    restart: always
+    depends_on:
+      - patient-service-db
+    env_file:
+      - .env
+    ports:
+      - 4000:4000
+    networks:
+      - patient
+
+volumes:
+  postgres_data:
+
+networks:
+  patient:
