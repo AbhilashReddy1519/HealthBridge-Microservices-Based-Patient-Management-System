@@ -40,11 +40,11 @@ public class Patient {
 
   // @NotNull
   @CreationTimestamp
-  private LocalDate  registeredAt;
+  private LocalDateTime registeredAt;
 
   // @NotNull
   @UpdateTimestamp
-  private LocalDateTime  updatedAt;
+  private LocalDateTime updatedAt;
 }
 
 
