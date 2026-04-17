@@ -1,0 +1,5 @@
+FROM postgres:16
+# if needed seed data add this for spring boot it going to add data automatically to db from resources
+# COPY data.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432
