@@ -2,22 +2,22 @@
 services:
   patient-service-db:
     build:
-      context: .
+      context: ./patient-service
       dockerfile: Dockerfile.patient-service-db
     image: pm/patient-service-db:v1
     container_name: patient_service_db
     restart: always
     env_file:
-      - .env
+      - ./patient-service/.env
     ports:
       - 5000:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - patient
+      - pm
   patient-service:
     build:
-      context: .
+      context: ./patient-service
       dockerfile: Dockerfile.patient-service
     image: pm/patient-service:v1
     container_name: patient_service_app
@@ -25,14 +25,27 @@ services:
     depends_on:
       - patient-service-db
     env_file:
-      - .env
+      - ./patient-service/.env
     ports:
       - 4000:4000
     networks:
-      - patient
+      - pm
+
+  billing-service:
+    build:
+      context: ./billing-service
+      dockerfile: Dockerfile.billing-service
+    image: pm/billing-service:v1
+    container_name: billing_service_app
+    restart: always
+    ports:
+      - 4001:4001
+      - 9001:9001
+    networks:
+      - pm
 
 volumes:
   postgres_data:
 
 networks:
-  patient:
+  pm:

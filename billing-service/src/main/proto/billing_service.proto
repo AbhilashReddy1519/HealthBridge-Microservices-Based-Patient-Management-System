@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_pakage = "billing";
-option java_outerclass_name = "BillingProto";
+option java_package = "billing";
+option java_outer_classname = "BillingProto";
 
 service BillingService {
   rpc CreateBillingAccount(BillingRequest) returns (BillingResponce);
@@ -16,5 +16,5 @@ message BillingRequest {
 
 message BillingResponce {
   string accountId = 1;
-  string statue = 2;
+  string status = 2;
 }
