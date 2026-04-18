@@ -23,6 +23,11 @@ spring:
 server:
   port: 4000
 
+grpc:
+  billing-service:
+    host: localhost
+    port: 9090
+
 logging:
   level:
     root: info

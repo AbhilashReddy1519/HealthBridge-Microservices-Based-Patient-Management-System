@@ -75,10 +75,109 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.8.16</version>
 		</dependency>
+
+		<!--GRPC -->
+		<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-netty-shaded</artifactId>
+				<version>1.69.0</version>
+		</dependency>
+		<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-protobuf</artifactId>
+				<version>1.69.0</version>
+		</dependency>
+		<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-stub</artifactId>
+				<version>1.69.0</version>
+		</dependency>
+		<dependency> <!-- necessary for Java 9+ -->
+				<groupId>org.apache.tomcat</groupId>
+				<artifactId>annotations-api</artifactId>
+				<version>6.0.53</version>
+				<scope>provided</scope>
+		</dependency>
+		<dependency>
+				<groupId>net.devh</groupId>
+				<artifactId>grpc-spring-boot-starter</artifactId>
+				<version>3.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java</artifactId>
+				<version>4.29.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
+			 <!-- Detect OS classifier FIRST -->
+    <plugin>
+      <groupId>kr.motd.maven</groupId>
+      <artifactId>os-maven-plugin</artifactId>
+      <version>1.7.1</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>detect</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+    <!-- Protobuf generator -->
+    <plugin>
+      <groupId>org.xolstice.maven.plugins</groupId>
+      <artifactId>protobuf-maven-plugin</artifactId>
+      <version>0.6.1</version>
+
+      <configuration>
+        <protocArtifact>
+          com.google.protobuf:protoc:4.29.1:exe:${os.detected.classifier}
+        </protocArtifact>
+
+        <pluginId>grpc-java</pluginId>
+
+        <pluginArtifact>
+          io.grpc:protoc-gen-grpc-java:1.69.0:exe:${os.detected.classifier}
+        </pluginArtifact>
+      </configuration>
+
+      <executions>
+        <execution>
+          <goals>
+            <goal>compile</goal>
+            <goal>compile-custom</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+    <!-- Build helper to add generated sources -->
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>build-helper-maven-plugin</artifactId>
+      <version>3.4.0</version>
+      <executions>
+        <execution>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>add-source</goal>
+          </goals>
+          <configuration>
+            <sources>
+              <source>${project.build.directory}/generated-sources/protobuf/java</source>
+              <source>${project.build.directory}/generated-sources/protobuf/grpc-java</source>
+            </sources>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
