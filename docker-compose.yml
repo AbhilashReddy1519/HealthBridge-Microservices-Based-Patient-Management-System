@@ -66,6 +66,23 @@ services:
     networks:
       - pm
 
+  analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile: Dockerfile.analytics-service
+    image: pm/analytics-service
+    container_name: analytics_service_app
+    restart: always
+    depends_on:
+    - kafka
+    env_file:
+      - ./analytics-service/.env
+    ports:
+      - 4002:4002
+    networks:
+      - pm
+
+
 
 volumes:
   postgres_data:
