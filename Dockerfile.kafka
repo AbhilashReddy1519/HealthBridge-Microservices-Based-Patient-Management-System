@@ -1,0 +1,9 @@
+FROM apache/kafka:4.1.2
+
+EXPOSE 9092 9093 9094
+
+# | Port | Purpose                 |
+# | ---- | ----------------------- |
+# | 9092 | internal broker traffic |
+# | 9093 | controller quorum       |
+# | 9094 | external clients        |

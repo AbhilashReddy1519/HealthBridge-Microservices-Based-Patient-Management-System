@@ -15,6 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - pm
+
   patient-service:
     build:
       context: ./patient-service
@@ -24,6 +25,7 @@ services:
     restart: always
     depends_on:
       - patient-service-db
+      - kafka
     env_file:
       - ./patient-service/.env
     ports:
@@ -38,11 +40,32 @@ services:
     image: pm/billing-service:v1
     container_name: billing_service_app
     restart: always
+    depends_on:
+      - kafka
     ports:
       - 4001:4001
       - 9001:9001
     networks:
       - pm
+
+  kafka:
+    build:
+      context: .
+      dockerfile: Dockerfile.kafka
+    image: pm/kafka:v1
+    container_name: kafka
+    restart: always
+    # depends_on:
+    #   - patient-service-db
+    env_file:
+      - .env
+    ports:
+      - 9092:9092
+      - 9093:9093
+      - 9094:9094
+    networks:
+      - pm
+
 
 volumes:
   postgres_data:

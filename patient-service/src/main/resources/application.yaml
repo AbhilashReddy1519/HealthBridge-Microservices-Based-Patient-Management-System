@@ -1,6 +1,12 @@
 spring:
   application:
     name: Patient Service
+
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+        
   # h2:
   #   console:
   #     enabled: true
@@ -31,6 +37,8 @@ grpc:
 logging:
   level:
     root: info
+
+
 
 # springdoc:
 #   api-docs:
