@@ -27,6 +27,20 @@ services:
     networks:
       - pm
 
+  auth-service-db:
+    # build: postgres:latest
+    image: postgres:16
+    container_name: auth_service_db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5001:5432
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+    networks:
+      - pm
+
   patient-service:
     build:
       context: ./patient-service
@@ -81,7 +95,7 @@ services:
     build:
       context: ./analytics-service
       dockerfile: Dockerfile.analytics-service
-    image: pm/analytics-service
+    image: pm/analytics-service:v1
     container_name: analytics_service_app
     restart: always
     depends_on:
@@ -92,11 +106,28 @@ services:
       - 4002:4002
     networks:
       - pm
+    
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile.auth-service
+    image: pm/auth-service:v1
+    container_name: auth_service_app
+    restart: always
+    depends_on:
+      - auth-service-db
+    env_file:
+      - ./auth-service/.env
+    ports:
+      - 4005:4005
+    networks:
+      - pm
 
 
 
 volumes:
   postgres_data:
+  auth_data:
 
 networks:
   pm:
