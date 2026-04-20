@@ -1,5 +1,16 @@
 
 services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile.api-gateway-service
+    image: pm/api-gateway:v1
+    container_name: api_gateway_app
+    restart: always
+    ports:
+      - 4004:4004
+    networks:
+      - pm
   patient-service-db:
     build:
       context: ./patient-service
@@ -28,8 +39,8 @@ services:
       - kafka
     env_file:
       - ./patient-service/.env
-    ports:
-      - 4000:4000
+    # ports:
+      # - 4000:4000
     networks:
       - pm
 

@@ -1,0 +1,30 @@
+FROM maven:3.9.9-eclipse-temurin-23 AS builder
+
+# in container
+WORKDIR /app
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+
+# Build the application JAR but do NOT run tests
+# Tests belong to CI pipeline, not container build stage.
+RUN mvn clean package -DskipTests
+
+# Production services normally use runtime-only images, not full JDK.
+# FROM openjdk:25-jdk AS runner
+FROM eclipse-temurin:23-jre
+
+WORKDIR /app
+
+COPY --from=builder ./app/target/api-gateway-0.0.1-SNAPSHOT.jar ./app.jar
+
+EXPOSE 4004
+
+RUN addgroup --system spring && adduser --system spring --ingroup spring
+
+USER spring
+
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
