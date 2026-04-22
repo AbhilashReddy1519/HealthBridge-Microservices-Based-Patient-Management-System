@@ -10,6 +10,7 @@ spring:
             - Path=/api/patients/**
           filters:
             - StripPrefix=1
+            - JwtValidation
           # REST CLIENT -> http://localhost:4004/api/patients
           # api gateway uses this rules to route req
           # API GATEWAY -> http://patient-service:4000/patients  /api is stripped
@@ -19,6 +20,19 @@ spring:
             - Path=/api-docs/patients
           filters:
             - RewritePath=/api-docs/patients, /v3/api-docs
-  
+
+        - id: auth-service-routes
+          uri: http://auth-service:4005
+          predicates:
+          - Path=/auth/**
+          filters:
+          - StripPrefix=1 
+
+        - id: api-docs-auth-route
+          uri: http://auth-service:4005
+          predicates:
+          - Path=/api-docs/auth
+          filters:
+          - RewritePath=/api-docs/auth,/v3/api-docs
 server:
   port: 4004

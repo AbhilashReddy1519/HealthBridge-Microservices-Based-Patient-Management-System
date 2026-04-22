@@ -7,6 +7,8 @@ services:
     image: pm/api-gateway:v1
     container_name: api_gateway_app
     restart: always
+    env_file:
+      - ./api-gateway/.env
     ports:
       - 4004:4004
     networks:
