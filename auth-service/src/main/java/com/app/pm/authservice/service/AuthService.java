@@ -1,5 +1,6 @@
 package com.app.pm.authservice.service;
 
+import java.security.SignatureException;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,11 @@ public class AuthService {
 
   public boolean validateToken(String token) {
     try {
-      jwtUtil.validateToken(token);
+      try {
+        jwtUtil.validateToken(token);
+      } catch (SignatureException e) {
+        e.printStackTrace();
+      }
       return true;
     } catch(JwtException ex) {
       return false;

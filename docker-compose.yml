@@ -115,7 +115,7 @@ services:
       dockerfile: Dockerfile.auth-service
     image: pm/auth-service:v1
     container_name: auth_service_app
-    restart: always
+    # restart: always
     depends_on:
       - auth-service-db
     env_file:
